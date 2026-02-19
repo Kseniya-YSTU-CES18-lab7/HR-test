@@ -149,3 +149,7 @@ Thumbs.db
 
 # Логи
 *.log
+
+# === SQLite базы данных (создаётся автоматически) ===
+database/*.sqlite
+database/*.db
