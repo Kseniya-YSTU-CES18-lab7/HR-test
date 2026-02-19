@@ -1,0 +1,17 @@
+/* Подсветка уволенных сотрудников */
+.table-secondary {
+    opacity: 0.85;
+}
+
+/* Блокировка полей для уволенных */
+.form-control:disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+/* Адаптивность таблицы на мобильных */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
