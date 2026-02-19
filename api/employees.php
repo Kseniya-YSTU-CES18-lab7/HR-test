@@ -63,3 +63,32 @@ if ($method === 'POST') {
     echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
     exit;
 }
+
+// PUT: редактировать (только если не уволен)
+if ($method === 'PUT') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    // Проверка: нельзя редактировать уволенного
+    $check = $pdo->prepare("SELECT is_fired FROM employees WHERE id = ?");
+    $check->execute([$data['id']]);
+    if ($check->fetchColumn()) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Нельзя редактировать уволенного']);
+        exit;
+    }
+    
+    $stmt = $pdo->prepare("UPDATE employees SET 
+        full_name=?, birth_date=?, passport_series=?, passport_number=?,
+        contact_info=?, address=?, department=?, position=?, 
+        salary=?, hire_date=? WHERE id=?");
+    
+    $stmt->execute([
+        $data['full_name'], $data['birth_date'], $data['passport_series'],
+        $data['passport_number'], $data['contact_info'], $data['address'],
+        $data['department'], $data['position'], $data['salary'], 
+        $data['hire_date'], $data['id']
+    ]);
+    
+    echo json_encode(['success' => true]);
+    exit;
+}
