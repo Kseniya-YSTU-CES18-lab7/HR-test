@@ -1,21 +1,15 @@
 <?php
-// Подключимся к базе данных через PDO
+// SQLite
 function getDB() {
-    $host = 'localhost';
-    $dbname = 'hr_accounting';
-    $username = 'root';
-    $password = '';
+    $dbFile = __DIR__ . '/../database/hr_accounting.sqlite';
     
     try {
-        $pdo = new PDO(
-            "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-            $username,
-            $password,
-            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-        );
+        $pdo = new PDO("sqlite:$dbFile");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         return $pdo;
     } catch(PDOException $e) {
-        die("Ошибка подключения: " . $e->getMessage());
+        die("Ошибка подключения к БД: " . $e->getMessage());
     }
 }
 ?>

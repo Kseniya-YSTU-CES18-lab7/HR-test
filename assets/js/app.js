@@ -1,13 +1,62 @@
 // Маска для телефона: +7 (___) ___-__-__
 document.getElementById('contactInfo')?.addEventListener('input', function(e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.startsWith('8')) value = '7' + value.slice(1);
-    if (value.length > 0) value = '+7' + value;
-    if (value.length > 2) value = value.slice(0, 2) + ' (' + value.slice(2);
-    if (value.length > 6) value = value.slice(0, 6) + ') ' + value.slice(6);
-    if (value.length > 10) value = value.slice(0, 10) + '-' + value.slice(10);
-    if (value.length > 13) value = value.slice(0, 13) + '-' + value.slice(13);
-    e.target.value = value.slice(0, 18);
+    // 1. Оставляем только цифры
+    let digits = e.target.value.replace(/\D/g, '');
+    
+    // 2. Если начинается с 8 → меняем на 7
+    if (digits.startsWith('8')) {
+        digits = '7' + digits.slice(1);
+    }
+    
+    // 3. Если не начинается с 7 → добавляем 7 в начало
+    if (digits.length > 0 && !digits.startsWith('7')) {
+        digits = '7' + digits;
+    }
+    
+    // 4. Ограничиваем 11 цифрами (7 + 10 цифр номера)
+    digits = digits.slice(0, 11);
+    
+    // 5. Форматируем пошагово
+    let result = '+7';
+    
+    // Код города: 3 цифры (индексы 1,2,3)
+    if (digits.length > 1) {
+        let area = digits.slice(1, 4);
+        result += ' (' + area;
+        // Закрываем скобку только если ввели 3 цифры
+        if (area.length === 3) {
+            result += ')';
+        }
+    }
+    
+    // Первая часть: 3 цифры (индексы 4,5,6)
+    if (digits.length > 4) {
+        let part1 = digits.slice(4, 7);
+        result += ' ' + part1;
+        // Добавляем дефис только если ввели 3 цифры
+        if (part1.length === 3) {
+            result += '-';
+        }
+    }
+    
+    // Вторая часть: 2 цифры (индексы 7,8)
+    if (digits.length > 7) {
+        let part2 = digits.slice(7, 9);
+        result += part2;
+        // Добавляем дефис только если ввели 2 цифры
+        if (part2.length === 2) {
+            result += '-';
+        }
+    }
+    
+    // Третья часть: 2 цифры (индексы 9,10)
+    if (digits.length > 9) {
+        let part3 = digits.slice(9, 11);
+        result += part3;
+    }
+    
+    // 6. Применяем отформатированное значение
+    e.target.value = result;
 });
 
 // Маска для серии паспорта (4 цифры)
