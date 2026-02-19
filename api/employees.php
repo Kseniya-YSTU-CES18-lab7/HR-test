@@ -92,3 +92,15 @@ if ($method === 'PUT') {
     echo json_encode(['success' => true]);
     exit;
 }
+
+// DELETE: уволить (по заданию: не удалять, а помечать)
+if ($method === 'DELETE') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    $stmt = $pdo->prepare("UPDATE employees SET is_fired=1 WHERE id=?");
+    $stmt->execute([$data['id']]);
+    
+    echo json_encode(['success' => true]);
+    exit;
+}
+?>
